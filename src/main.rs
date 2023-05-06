@@ -98,7 +98,11 @@ fn get_repo_at_path(path: &String) -> Option<(String, String)> {
             .collect::<Vec<&str>>();
 
         let (repo_name, repo_owner) = (
-            remote_url[remote_url.len() - 1].strip_suffix(".git").expect("Repo url didnt have '.git' ??"),
+            if remote_url[remote_url.len() - 1].ends_with(".git") {
+                remote_url[remote_url.len() - 1].strip_suffix(".git").expect("How did this happen?")
+            } else {
+                remote_url[remote_url.len() - 1]
+            },
             remote_url[remote_url.len() - 2]
         );
 
@@ -113,10 +117,6 @@ fn main() {
     let mut current_repo = get_repo_at_path(&cwd);
     let _ = ansi_term::enable_ansi_support();
     
-    println!("CWD: {}, REPO: {}", cwd, match current_repo.clone() {
-        Some(repo) => repo.0,
-        None => "No repo found".to_owned()
-    });
     loop {
         print_prompt(&cwd, &current_repo);
 
