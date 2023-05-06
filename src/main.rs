@@ -115,6 +115,7 @@ fn get_repo_at_path(path: &String) -> Option<(String, String)> {
 fn main() {
     let cwd = current_dir().unwrap().as_path().to_str().unwrap().to_owned();
     let mut current_repo = get_repo_at_path(&cwd);
+    #[cfg(target_os = "windows")]
     let _ = ansi_term::enable_ansi_support();
     
     loop {
